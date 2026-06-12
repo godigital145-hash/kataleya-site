@@ -1,15 +1,187 @@
+---
+import "../styles/global.css";
+---
+
 <!doctype html>
-<html lang="en">
+<html lang='en'>
 	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="generator" content={Astro.generator} />
+		<meta charset='UTF-8' />
+		<meta name='viewport' content='width=device-width' />
+		<link rel='icon' type='image/svg+xml' href='/favicon.svg' />
+		<link rel='icon' href='/favicon.ico' />
+		<meta name='generator' content={Astro.generator} />
 		<title>Astro Basics</title>
+		<script is:inline>
+			try {
+				if (sessionStorage.getItem("site-loaded")) {
+					document.documentElement.classList.add("loader-skip");
+					window.__siteLoaderDone = true;
+				}
+			} catch (e) {}
+		</script>
 	</head>
 	<body>
-		<slot />
+		<div id='site-loader' class='site-loader'>
+			<div class='site-loader-inner'>
+				<div class='site-loader-bar'>
+					<div id='site-loader-fill' class='site-loader-fill'></div>
+				</div>
+				<div id='site-loader-pct' class='site-loader-pct'>0%</div>
+			</div>
+		</div>
+		<div id='page-transition'></div>
+		<div id='page-content'>
+			<slot />
+		</div>
+		<script>
+			(() => {
+				const SESSION_KEY = "site-loaded";
+				const loader = document.getElementById("site-loader");
+				const fill = document.getElementById("site-loader-fill");
+				const pct = document.getElementById("site-loader-pct");
+				if (!loader || !fill || !pct) return;
+				if (sessionStorage.getItem(SESSION_KEY)) {
+					loader.remove();
+					(window as any).__siteLoaderDone = true;
+					window.dispatchEvent(new CustomEvent("site-loader-done"));
+					return;
+				}
+				const setProgress = (value: number) => {
+					const v = Math.max(0, Math.min(100, Math.round(value)));
+					fill.style.width = v + "%";
+					pct.textContent = v + "%";
+				};
+				setProgress(0);
+				let finished = false;
+				const finish = () => {
+					if (finished) return;
+					finished = true;
+					setProgress(100);
+					sessionStorage.setItem(SESSION_KEY, "1");
+					loader.classList.add("site-loader-hidden");
+					window.setTimeout(() => {
+						loader.remove();
+						(window as any).__siteLoaderDone = true;
+						window.dispatchEvent(
+							new CustomEvent("site-loader-done"),
+						);
+					}, 600);
+				};
+				const trackImages = () => {
+					const imgs = Array.from(document.images);
+					const total = imgs.length;
+					if (total === 0) {
+						finish();
+						return;
+					}
+					let loaded = 0;
+					const onOne = () => {
+						loaded += 1;
+						setProgress((loaded / total) * 100);
+						if (loaded >= total) finish();
+					};
+					imgs.forEach((img) => {
+						if (img.complete && img.naturalWidth > 0) {
+							onOne();
+						} else {
+							img.addEventListener("load", onOne, { once: true });
+							img.addEventListener("error", onOne, {
+								once: true,
+							});
+						}
+					});
+					window.setTimeout(finish, 8000);
+				};
+				if (
+					document.readyState === "complete" ||
+					document.readyState === "interactive"
+				) {
+					trackImages();
+				} else {
+					document.addEventListener("DOMContentLoaded", trackImages, {
+						once: true,
+					});
+				}
+			})();
+		</script>
+		<script>
+			import { animate } from "animejs";
+
+			const panel = document.getElementById("page-transition");
+			const content = document.getElementById("page-content");
+			const REVEAL_DURATION = 2000;
+			const COVER_DURATION = 1000;
+			const EASE = "inOutQuart";
+
+			if (panel && content) {
+				const reveal = () => {
+					panel.style.transform = "translateY(0%)";
+					content.style.opacity = "0";
+					animate(panel, {
+						translateY: ["0%", "-100%"],
+						duration: REVEAL_DURATION,
+						ease: EASE,
+					});
+					animate(content, {
+						opacity: [0, 1],
+						duration: REVEAL_DURATION,
+						ease: "outQuad",
+					});
+				};
+
+				if ((window as any).__siteLoaderDone) {
+					reveal();
+				} else {
+					window.addEventListener(
+						"site-loader-done",
+						() => reveal(),
+						{ once: true },
+					);
+				}
+				window.addEventListener("pageshow", (e) => {
+					if ((e as PageTransitionEvent).persisted) reveal();
+				});
+
+				document.addEventListener("click", (e) => {
+					const target = e.target as HTMLElement | null;
+					const anchor = target?.closest(
+						"a",
+					) as HTMLAnchorElement | null;
+					if (!anchor) return;
+					const href = anchor.getAttribute("href");
+					if (
+						!href ||
+						href.startsWith("#") ||
+						href.startsWith("mailto:") ||
+						href.startsWith("tel:")
+					)
+						return;
+					if (anchor.target === "_blank") return;
+					const url = new URL(anchor.href, window.location.href);
+					if (url.origin !== window.location.origin) return;
+					if (
+						url.pathname === window.location.pathname &&
+						url.search === window.location.search
+					)
+						return;
+					e.preventDefault();
+					panel.style.transform = "translateY(100%)";
+					animate(panel, {
+						translateY: ["100%", "0%"],
+						duration: COVER_DURATION,
+						ease: EASE,
+					});
+					animate(content, {
+						opacity: [1, 0],
+						duration: COVER_DURATION,
+						ease: "inQuad",
+					});
+					window.setTimeout(() => {
+						window.location.href = url.href;
+					}, COVER_DURATION);
+				});
+			}
+		</script>
 	</body>
 </html>
 
