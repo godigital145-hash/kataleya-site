@@ -1,5 +1,5 @@
 import Container from "./Container";
-import logo from "../assets/Kataleya_titre.png";
+import logo from "../assets/Kataleya_titre.PNG";
 import { AkarIconsInstagramFill, RiArrowRightUpLine } from "./icons";
 
 export default function Footer() {
