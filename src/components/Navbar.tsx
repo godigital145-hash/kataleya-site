@@ -1,8 +1,7 @@
 import { useEffect, useState, type SubmitEventHandler } from "react";
 import Container from "./Container";
-import logo from "../assets/Kataleya_titre.png";
+import logo from "../assets/Kataleya_titre.PNG";
 import { AkarIconsInstagramFill, RiSearchLine } from "./icons";
-import type { ReactFormState } from "react-dom/client";
 
 export default function Navbar() {
     const [path, setPath] = useState("");
