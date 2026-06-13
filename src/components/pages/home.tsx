@@ -7,6 +7,7 @@ import image_1 from "../../assets/images_1.jpg";
 import quote from "../../assets/quote.png"
 import Titre from "../Titre";
 import RevealImage from "../RevealImage";
+import diaporama from "../../assets/diaporama.jpg"
 
 import CEO from "../../assets/CEO_2.jpg";
 
@@ -20,6 +21,7 @@ export default function Home() {
             <SectionOfTree image={suite_Image} title="Nos travaux" />
             <CeoQuote texte="Chez La Kataleya, nous accompagnons chaque chantier avec rigueur et proximité, en sélectionnant des produits de qualité qui allient performance, durabilité et élégance pour un résultat à la hauteur de vos ambitions." />
             <Partenaire />
+            <Diaporama />
             <Panorama />
             <Temoignage />
             <Footer />
@@ -222,6 +224,72 @@ function HeaderImage() {
     )
 }
 
+export function Diaporama() {
+    const wrapRef = useRef<HTMLDivElement | null>(null);
+    const imgRef = useRef<HTMLImageElement | null>(null);
+    useEffect(() => {
+        const wrap = wrapRef.current;
+        const img = imgRef.current;
+        if (!wrap || !img) return;
+        let raf = 0;
+        const update = () => {
+            raf = 0;
+            const rect = wrap.getBoundingClientRect();
+            const vh = window.innerHeight;
+            if (rect.bottom < 0 || rect.top > vh) return;
+            const progress = (vh - rect.top) / (vh + rect.height);
+            const clamped = Math.max(0, Math.min(1, progress));
+            const y = (clamped - 0.9) * 200;
+            img.style.transform = `scale(1.2) translate3d(0, ${y}px, 0)`;
+        };
+        const onScroll = () => {
+            if (raf) return;
+            raf = window.requestAnimationFrame(update);
+        };
+        update();
+        window.addEventListener("scroll", onScroll, { passive: true });
+        window.addEventListener("resize", onScroll);
+        return () => {
+            window.removeEventListener("scroll", onScroll);
+            window.removeEventListener("resize", onScroll);
+            if (raf) cancelAnimationFrame(raf);
+        };
+    }, []);
+    return (
+        <section className="mt-30">
+            <div className="relative w-full h-[110vh]">
+                <div ref={wrapRef} className="h-full w-full overflow-hidden relative">
+                    <img
+                        ref={imgRef}
+                        src={diaporama.src}
+                        alt=""
+                        className="absolute inset-0 h-full w-full object-cover"
+                        style={{ transform: "scale(1.2)", willChange: "transform" }}
+                    />
+                </div>
+                <div className="absolute top-0 left-0 w-full h-full flex items-end py-20">
+                    <div className="w-full">
+                        <Container>
+                            <div className="flex justify-end items-end ">
+                                <div className="p-8 bg-white w-137.5 space-y-5">
+                                    <h1 className="text-5xl font-bold inter mb-4">Des cuisines pensées pour inspirer</h1>
+                                    <p className="lg">
+                                        Bien plus qu'un simple espace de préparation, la cuisine est le cœur de la maison. Chez La Kataleya, nous créons des cuisines élégantes et fonctionnelles, conçues avec des matériaux de qualité et des finitions soignées pour offrir un cadre de vie à la fois chaleureux et raffiné.
+                                    </p>
+                                    <a href="" className="flex items-center justify-between p-4 border-2 border-slate-100 bg-slate-100 mt-6 font-bold uppercase">
+                                        Voir notre catalogue de cuisine
+                                        <RiArrowRightLongLine className="h-6 w-6" />
+                                    </a>
+                                </div>
+                            </div>
+                        </Container>
+                    </div>
+                </div>
+            </div>
+        </section>
+    )
+}
+
 export function CeoQuote({ texte }: { texte: string }) {
     return (
         <section className="mt-24 mb-24 flex items-center">
@@ -323,7 +391,7 @@ export function Partenaire() {
 
 function Panorama() {
     return (
-        <section className="relative py-5 mt-30">
+        <section className="relative py-5 mt-10">
             <div className="w-full h-full md:h-150 absolute top-0 left-0 z-0" />
             <div className="relative z-10 h-187.5">
                 <Container>

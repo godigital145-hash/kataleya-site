@@ -1,6 +1,5 @@
 import Container from "../Container";
 import Footer from "../Footer";
-import { RiArrowRightUpLine } from "../icons";
 import Navbar from "../Navbar";
 import { CeoQuote, Partenaire } from "./home";
 import image_1 from "../../assets/images_1.jpg";
