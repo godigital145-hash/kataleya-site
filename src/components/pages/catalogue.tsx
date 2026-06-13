@@ -79,15 +79,15 @@ export default function Catalogue() {
                     <div className="flex-1">
                         <div className="columns-3 gap-6 [column-fill:balance]">
                             {[
-                                { src: "/aff_1.jpg", label: "Cuisine" },
-                                { src: "/aff_2.jpg", label: "Carrelage" },
-                                { src: "/aff_3.jpg", label: "Salle de Bains" },
-                                { src: "/aff_1.jpg", label: "Aménagement" },
-                                { src: "/aff_2.jpg", label: "Cuisine sur mesure" },
-                                { src: "/aff_3.jpg", label: "Carrelage d'exception" },
+                                { src: "/aff_1.jpg", label: "Cuisine", slug: "cuisine" },
+                                { src: "/aff_2.jpg", label: "Carrelage", slug: "carrelage" },
+                                { src: "/aff_3.jpg", label: "Salle de Bains", slug: "salle-de-bain" },
+                                { src: "/aff_1.jpg", label: "Aménagement", slug: "amenagement" },
+                                { src: "/aff_2.jpg", label: "Cuisine sur mesure", slug: "cuisine" },
+                                { src: "/aff_3.jpg", label: "Carrelage d'exception", slug: "carrelage" },
                             ].map((item, i) => (
                                 <a
-                                    href="#"
+                                    href={`/catalogue/${item.slug}`}
                                     key={i}
                                     className="group block mb-6 break-inside-avoid relative overflow-hidden"
                                 >

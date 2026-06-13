@@ -1,0 +1,10 @@
+---
+import CollectionPage from "../../components/pages/collection";
+import Layout from "../../layouts/Layout.astro";
+
+const { id } = Astro.params;
+---
+
+<Layout>
+    <CollectionPage id={id ?? ""} client:load />
+</Layout>
