@@ -33,14 +33,14 @@ function Header() {
     return (
         <section>
             <Container>
-                <div className="md:h-150 flex flex-col items-start justify-center gap-4 inter">
-                    <h1 className="text-8xl font-bold">
+                <div className="min-h-[60vh] md:h-150 flex flex-col items-start justify-center gap-4 inter py-10 md:py-0">
+                    <h1 className="text-5xl sm:text-6xl lg:text-8xl font-bold">
                         Plus qu'un <span className="relative libre italic font-bold deco z-3 before:bg-amber-400">style</span>, <br />
                         Des solutions <span className="relative libre italic font-bold deco z-3 before:bg-blue-400">Élégantes</span>
                     </h1>
-                    <a href="/travaux" className="px-4 py-3 bg-slate-200 inter text-lg uppercase flex items-center gap-4 font-bold">
+                    <a href="/travaux" className="px-4 py-3 bg-slate-200 inter text-sm md:text-lg uppercase flex items-center gap-4 font-bold">
                         Découvrez nos travaux
-                        <RiArrowRightLongLine className="h-8 w-8" />
+                        <RiArrowRightLongLine className="h-6 w-6 md:h-8 md:w-8" />
                     </a>
                 </div>
             </Container>
@@ -169,7 +169,7 @@ function HeaderImage() {
 
     return (
         <Container>
-            <div ref={wrapRef} className="h-200 relative overflow-hidden">
+            <div ref={wrapRef} className="h-[60vh] md:h-200 relative overflow-hidden">
                 {next && (
                     <img
                         src={next.src}
@@ -205,17 +205,17 @@ function HeaderImage() {
                     ))}
                 </div>
                 <div className="absolute inset-0 bg-black/40 pointer-events-none" />
-                <div className="absolute flex w-full h-full p-7 top-0 left-0 items-end text-white z-10">
-                    <div className="flex items-center text-3xl pb-2 w-[30%]">
+                <div className="absolute flex w-full h-full p-4 md:p-7 top-0 left-0 items-end text-white z-10">
+                    <div className="flex items-center text-lg md:text-3xl pb-2 w-1/2 md:w-[30%]">
                         <span key={current} className="font-bold uppercase title-up">{active.label}</span>
                     </div>
 
-                    <div className="flex items-center gap-4 ml-auto">
-                        <button onClick={() => go(current - 1)} className="p-2 flex w-12 aspect-square hover:bg-slate-200/40">
-                            <RiArrowLeftLine className="h-8 w-8" />
+                    <div className="flex items-center gap-2 md:gap-4 ml-auto">
+                        <button onClick={() => go(current - 1)} className="p-2 flex w-10 md:w-12 aspect-square hover:bg-slate-200/40">
+                            <RiArrowLeftLine className="h-6 w-6 md:h-8 md:w-8" />
                         </button>
-                        <button onClick={() => go(current + 1)} className="p-2 flex w-12 aspect-square hover:bg-slate-200/40">
-                            <RiArrowRightLine className="h-8 w-8" />
+                        <button onClick={() => go(current + 1)} className="p-2 flex w-10 md:w-12 aspect-square hover:bg-slate-200/40">
+                            <RiArrowRightLine className="h-6 w-6 md:h-8 md:w-8" />
                         </button>
                     </div>
                 </div>
@@ -257,7 +257,7 @@ export function Diaporama() {
     }, []);
     return (
         <section className="mt-30">
-            <div className="relative w-full h-[110vh]">
+            <div className="relative w-full h-[80vh] md:h-[110vh]">
                 <div ref={wrapRef} className="h-full w-full overflow-hidden relative">
                     <img
                         ref={imgRef}
@@ -270,10 +270,10 @@ export function Diaporama() {
                 <div className="absolute top-0 left-0 w-full h-full flex items-end py-20">
                     <div className="w-full">
                         <Container>
-                            <div className="flex justify-end items-end ">
-                                <div className="p-8 bg-white w-137.5 space-y-5">
-                                    <h1 className="text-5xl font-bold inter mb-4">Des cuisines pensées pour inspirer</h1>
-                                    <p className="lg">
+                            <div className="flex justify-center md:justify-end items-end">
+                                <div className="p-6 md:p-8 bg-white w-full md:w-137.5 space-y-5">
+                                    <h1 className="text-3xl md:text-5xl font-bold inter mb-4">Des cuisines pensées pour inspirer</h1>
+                                    <p className="text-base md:text-lg">
                                         Bien plus qu'un simple espace de préparation, la cuisine est le cœur de la maison. Chez La Kataleya, nous créons des cuisines élégantes et fonctionnelles, conçues avec des matériaux de qualité et des finitions soignées pour offrir un cadre de vie à la fois chaleureux et raffiné.
                                     </p>
                                     <a href="" className="flex items-center justify-between p-4 border-2 border-slate-100 bg-slate-100 mt-6 font-bold uppercase">
@@ -294,20 +294,20 @@ export function CeoQuote({ texte }: { texte: string }) {
     return (
         <section className="mt-24 mb-24 flex items-center">
             <Container>
-                <div className="flex gap-12 items-center h-250">
-                    <div className="md:col-span-2 inter w-150 relative">
-                        <img src={quote.src} alt="Quote" className="absolute -top-15 -left-15" />
-                        <p className="text-2xl md:text-4xl lg:text-[40px] leading-snug text-neutral-900 -mt-4">
+                <div className="flex flex-col lg:flex-row gap-12 lg:items-center lg:h-250 py-10">
+                    <div className="inter w-full lg:w-150 relative">
+                        <img src={quote.src} alt="Quote" className="absolute -top-8 -left-4 md:-top-15 md:-left-15 w-16 md:w-auto" />
+                        <p className="text-xl md:text-3xl lg:text-[40px] leading-snug text-neutral-900 -mt-4 relative">
                             {texte}
                         </p>
                     </div>
-                    <div className="flex flex-col items-start gap-4">
+                    <div className="flex flex-col items-start gap-4 w-full lg:w-auto">
                         <RevealImage
                             src={CEO.src}
                             alt="CEO"
                             parallax
                             parallaxAmount={120}
-                            className="aspect-9/16 w-100 max-w-100 bg-neutral-200"
+                            className="aspect-9/16 w-full lg:w-100 max-w-100 bg-neutral-200"
                         />
                         <div>
                             <p className="libre font-bold text-lg md:text-xl lg:text-2xl">Bernard NGOM</p>
@@ -333,7 +333,7 @@ function SectionOfTree({ image }: { image: string[], title: string }) {
                     <div className="absolute inset-0 z-0">
                         <img src={image} alt={title} className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105" />
                     </div>
-                    <div className="absolute z-10 h-full w-full flex items-end justify-start bg-black/40 text-white text-4xl font-semibold p-8 gap-3">
+                    <div className="absolute z-10 h-full w-full flex items-end justify-start bg-black/40 text-white text-2xl md:text-4xl font-semibold p-4 md:p-8 gap-3">
                         <span>{title}</span>
                         <RiArrowRightUpLine className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     </div>
@@ -343,8 +343,17 @@ function SectionOfTree({ image }: { image: string[], title: string }) {
     }
     return (
         <section className="mt-6">
+            <div className="md:hidden overflow-x-auto scrollbar-none snap-x snap-mandatory">
+                <div className="flex w-fit gap-4 px-4">
+                    {liste_Image.map((item, index) => (
+                        <div key={index} className="shrink-0 w-75 snap-center">
+                            <Image image={item.image} title={item.titre} />
+                        </div>
+                    ))}
+                </div>
+            </div>
             <Container>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {liste_Image.map((item, index) => (
                         <Image key={index} image={item.image} title={item.titre} />
                     ))}
@@ -377,7 +386,7 @@ export function Partenaire() {
         <section>
             <Container>
                 <Titre title="Les Marques Que Nous Aimons" />
-                <div className="grid md:grid-cols-4 lg:grid-cols-8 gap-6">
+                <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-8 gap-4 md:gap-6">
                     {liste_Marque.map((marque, index) => (
                         <div key={index} className="aspect-square w-full border border-slate-300">
                             <img src={marque} alt={`Marque ${index + 1}`} className="object-contain h-full w-full p-4" />
@@ -393,7 +402,7 @@ function Panorama() {
     return (
         <section className="relative py-5 mt-10">
             <div className="w-full h-full md:h-150 absolute top-0 left-0 z-0" />
-            <div className="relative z-10 h-187.5">
+            <div className="relative z-10 md:h-187.5">
                 <Container>
                     <Titre title="Nos travaux en images" url="/travaux" />
                     {/* <div className="text-white">
@@ -401,11 +410,11 @@ function Panorama() {
                 </Container>
                 <div className="mx-auto px-4 md:px-8 lg:px-19 overflow-x-auto scrollbar-none">
                     <div className="w-fit flex items-center gap-6 ">
-                        <div className="w-md h-134 bg-amber-50" />
-                        <div className="w-md h-134 bg-amber-50" />
-                        <div className="w-md h-134 bg-amber-50" />
-                        <div className="w-md h-134 bg-amber-50" />
-                        <div className="w-md h-134 bg-amber-50" />
+                        <div className="w-72 md:w-md h-80 md:h-134 bg-amber-50" />
+                        <div className="w-72 md:w-md h-80 md:h-134 bg-amber-50" />
+                        <div className="w-72 md:w-md h-80 md:h-134 bg-amber-50" />
+                        <div className="w-72 md:w-md h-80 md:h-134 bg-amber-50" />
+                        <div className="w-72 md:w-md h-80 md:h-134 bg-amber-50" />
                     </div>
                 </div>
             </div>
@@ -422,10 +431,10 @@ export function Temoignage() {
             <div className="w-full overflow-hidden">
                 <div className="marquee items-center py-2">
                     {Array.from({ length: 8 }).map((_, i) => (
-                        <div key={`a-${i}`} className="w-md h-70 bg-slate-100 shrink-0 mr-6" />
+                        <div key={`a-${i}`} className="w-72 md:w-md h-56 md:h-70 bg-slate-100 shrink-0 mr-6" />
                     ))}
                     {Array.from({ length: 8 }).map((_, i) => (
-                        <div key={`b-${i}`} className="w-md h-70 bg-slate-100 shrink-0 mr-6" aria-hidden="true" />
+                        <div key={`b-${i}`} className="w-72 md:w-md h-56 md:h-70 bg-slate-100 shrink-0 mr-6" aria-hidden="true" />
                     ))}
                 </div>
             </div>

@@ -93,7 +93,7 @@ export default function CollectionPage({ id }: { id: string }) {
                 <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
                     {collection.products.map((product) => (
                         <a key={product.id} href="#" className="group block">
-                            <div className="relative aspect-square overflow-hidden bg-neutral-100 mb-4">
+                            <div className="relative aspect-square overflow-hidden border border-neutral-100 bg-neutral-100 mb-4">
                                 <img
                                     src={product.image}
                                     alt={product.name}
