@@ -77,20 +77,20 @@ export default function CollectionPage({ id }: { id: string }) {
             <Navbar />
             <div className="mt-10" />
             <Container>
-                <div className="flex items-start gap-11 mb-16">
-                    <div className="w-112.5">
+                <div className="flex flex-col lg:flex-row lg:items-start gap-8 lg:gap-11 mb-10 lg:mb-16">
+                    <div className="w-full lg:w-112.5">
                         <a href="/catalogue" className="inter text-sm text-neutral-500 hover:text-neutral-900 mb-6 flex items-center gap-4">
                             <RiArrowLeftLongLine className="h-6 w-6" />
                             Retour au catalogue</a>
-                        <h1 className="text-[64px] font-bold inter mb-6" style={{ lineHeight: 1 }}>{collection.title}</h1>
-                        <p className="text-lg text-neutral-700">{collection.description}</p>
+                        <h1 className="text-4xl sm:text-5xl lg:text-[64px] font-bold inter mb-6" style={{ lineHeight: 1 }}>{collection.title}</h1>
+                        <p className="text-base md:text-lg text-neutral-700">{collection.description}</p>
                     </div>
-                    <div className="flex-1 inter text-neutral-500 text-sm self-end">
+                    <div className="flex-1 w-full inter text-neutral-500 text-sm lg:self-end">
                         {collection.products.length} produit{collection.products.length > 1 ? "s" : ""}
                     </div>
                 </div>
 
-                <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6 lg:gap-8">
                     {collection.products.map((product) => (
                         <a key={product.id} href="#" className="group block">
                             <div className="relative aspect-square overflow-hidden border border-neutral-100 bg-neutral-100 mb-4">
@@ -102,7 +102,7 @@ export default function CollectionPage({ id }: { id: string }) {
                             </div>
                             <div className="flex items-start justify-between gap-3">
                                 <div>
-                                    <h3 className="inter font-bold text-lg">{product.name}</h3>
+                                    <h3 className="inter font-bold text-base md:text-lg">{product.name}</h3>
                                     <p className="inter text-neutral-500 text-sm mt-1">{product.price}</p>
                                 </div>
                                 <RiArrowRightUpLine className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity mt-1" />
@@ -112,7 +112,7 @@ export default function CollectionPage({ id }: { id: string }) {
                 </div>
             </Container>
             <div className="h-20 w-full" />
-            <Partenaire />
+            {/* <Partenaire /> */}
             <Footer />
         </div>
     );

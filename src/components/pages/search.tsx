@@ -74,7 +74,7 @@ function TitreAndRecentSearch({ searchList }: { searchList: string[] }) {
     return (
         <div className="mt-10">
             <Container>
-                <h1 className="text-[64px] font-bold inter mb-5" style={{ lineHeight: 1 }}>Recherche</h1>
+                <h1 className="text-4xl sm:text-5xl lg:text-[64px] font-bold inter mb-5" style={{ lineHeight: 1 }}>Recherche</h1>
                 {
                     searchList && (<div className="flex items-center flex-wrap gap-2">
                         <h3 className="text-xl font-bold">Dernière Recherche</h3>

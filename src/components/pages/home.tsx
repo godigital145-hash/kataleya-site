@@ -307,7 +307,7 @@ export function CeoQuote({ texte }: { texte: string }) {
                             alt="CEO"
                             parallax
                             parallaxAmount={120}
-                            className="aspect-9/16 w-full lg:w-100 max-w-100 bg-neutral-200"
+                            className="aspect-square w-full lg:w-100 max-w-100 bg-neutral-200"
                         />
                         <div>
                             <p className="libre font-bold text-lg md:text-xl lg:text-2xl">Bernard NGOM</p>

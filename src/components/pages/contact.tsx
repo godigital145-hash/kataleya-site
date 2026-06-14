@@ -25,10 +25,10 @@ export default function ContactPage() {
             <Navbar />
             <div className="mt-10" />
             <Container>
-                <div className="flex items-start gap-11">
-                    <div className="w-112.5">
-                        <h1 className="text-[64px] font-bold inter mb-10" style={{ lineHeight: 1 }}>Contact</h1>
-                        <p className="text-lg text-neutral-700 mb-10">
+                <div className="flex flex-col lg:flex-row items-start gap-8 lg:gap-11">
+                    <div className="w-full lg:w-112.5">
+                        <h1 className="text-4xl sm:text-5xl lg:text-[64px] font-bold inter mb-6 lg:mb-10" style={{ lineHeight: 1 }}>Contact</h1>
+                        <p className="text-base md:text-lg text-neutral-700 mb-10">
                             Nous accompagnons chaque chantier avec rigueur et proximité pour un résultat à la hauteur de vos ambitions.
                         </p>
                         <div className="flex flex-col gap-6">
@@ -57,8 +57,8 @@ export default function ContactPage() {
                             </div>
                         </div>
                     </div>
-                    <div className="flex-1 grid grid-cols-2">
-                        <div className="flex-1">
+                    <div className="flex-1 w-full">
+                        <div className="w-full">
                             <form onSubmit={onSubmit} className="flex flex-col gap-5">
                                 <div className="grid grid-cols-2 gap-5 mb-4">
                                     <Field label="Nom" name="nom" value={form.nom} onChange={onChange} />
@@ -85,9 +85,9 @@ export default function ContactPage() {
                     </div>
                     <div></div>
                 </div>
-                <div className="mt-20 h-[450px]">
-                    <h2 className="libre italic text-3xl mb-6">Nous trouver</h2>
-                    <div className="w-full h-full overflow-hidden">
+                <div className="mt-16 lg:mt-20">
+                    <h2 className="libre italic text-2xl md:text-3xl mb-4 md:mb-6">Nous trouver</h2>
+                    <div className="w-full h-75 md:h-112.5 overflow-hidden">
                         <iframe
                             title="Localisation La Kataleya"
                             src="https://www.google.com/maps?q=Yaound%C3%A9%2C%20Cameroun&output=embed"
