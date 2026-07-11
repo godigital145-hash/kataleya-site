@@ -12,6 +12,8 @@ type Produit = {
     price: string | null;
     category: string | null;
     cover_image: string | null;
+    catalogue_id: number | null;
+    catalogue_title?: string | null;
 };
 
 type Image = { id: number; url: string; position: number };
@@ -63,6 +65,12 @@ export default function ProduitPage({ id: propsId }: { id?: string }) {
                     {produit && (
                         <>
                             <div className="flex flex-wrap items-center gap-3 mb-4 inter text-sm text-neutral-500">
+                                {produit.catalogue_title && produit.catalogue_id && (
+                                    <a href={`/catalogue/${produit.catalogue_id}`} className="hover:text-neutral-900 underline">
+                                        {produit.catalogue_title}
+                                    </a>
+                                )}
+                                {produit.catalogue_title && produit.category && <span className="h-1 w-1 rounded-full bg-neutral-400" />}
                                 {produit.category && <span>{produit.category}</span>}
                                 {produit.category && produit.price && <span className="h-1 w-1 rounded-full bg-neutral-400" />}
                                 {produit.price && <span>{produit.price}</span>}

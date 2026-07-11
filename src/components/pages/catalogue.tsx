@@ -6,6 +6,13 @@ import Navbar from "../Navbar";
 import { RiArrowRightUpLine } from "../icons";
 import { Partenaire } from "./home";
 
+type Catalogue = {
+    id: number;
+    title: string;
+    description: string | null;
+    cover_image: string;
+};
+
 function ParallaxImage({ src, alt }: { src: string; alt: string }) {
     const wrapRef = useRef<HTMLDivElement | null>(null);
     const imgRef = useRef<HTMLImageElement | null>(null);
@@ -62,6 +69,15 @@ function ParallaxImage({ src, alt }: { src: string; alt: string }) {
 }
 
 export default function Catalogue() {
+    const [catalogues, setCatalogues] = useState<Catalogue[] | null>(null);
+
+    useEffect(() => {
+        fetch("/api/catalogues")
+            .then((r) => r.json() as Promise<{ catalogues: Catalogue[] }>)
+            .then((d) => setCatalogues(d.catalogues))
+            .catch(() => setCatalogues([]));
+    }, []);
+
     return (
         <div>
             <Navbar />
@@ -77,31 +93,30 @@ export default function Catalogue() {
                         </div>
                     </div>
                     <div className="flex-1 w-full">
-                        <div className="columns-2 lg:columns-3 gap-4 md:gap-6 [column-fill:balance]">
-                            {[
-                                { src: "/aff_1.jpg", label: "Cuisine", slug: "cuisine" },
-                                { src: "/aff_2.jpg", label: "Carrelage", slug: "carrelage" },
-                                { src: "/aff_3.jpg", label: "Salle de Bains", slug: "salle-de-bain" },
-                                { src: "/aff_1.jpg", label: "Aménagement", slug: "amenagement" },
-                                { src: "/aff_2.jpg", label: "Cuisine sur mesure", slug: "cuisine" },
-                                { src: "/aff_3.jpg", label: "Carrelage d'exception", slug: "carrelage" },
-                            ].map((item, i) => (
-                                <a
-                                    href={`/catalogue/${item.slug}`}
-                                    key={i}
-                                    className="group block mb-4 md:mb-6 break-inside-avoid relative overflow-hidden"
-                                >
-                                    <div className="relative overflow-hidden">
-                                        <ParallaxImage src={item.src} alt={item.label} />
-                                        <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/10 to-transparent pointer-events-none" />
-                                        <div className="absolute bottom-0 left-0 p-4 md:p-8 flex items-center gap-2 text-white font-semibold text-base md:text-xl lg:text-3xl inter">
-                                            <span>{item.label}</span>
-                                            <RiArrowRightUpLine className="h-6 w-6 md:h-8 md:w-8 opacity-0 group-hover:opacity-100 transition-opacity" />
+                        {!catalogues && <p className="text-neutral-500">Chargement…</p>}
+                        {catalogues && catalogues.length === 0 && (
+                            <p className="text-neutral-500">Aucun catalogue pour l'instant.</p>
+                        )}
+                        {catalogues && catalogues.length > 0 && (
+                            <div className="columns-2 lg:columns-3 gap-4 md:gap-6 [column-fill:balance]">
+                                {catalogues.map((cat) => (
+                                    <a
+                                        href={`/catalogue/${cat.id}`}
+                                        key={cat.id}
+                                        className="group block mb-4 md:mb-6 break-inside-avoid relative overflow-hidden"
+                                    >
+                                        <div className="relative overflow-hidden">
+                                            <ParallaxImage src={cat.cover_image} alt={cat.title} />
+                                            <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/10 to-transparent pointer-events-none" />
+                                            <div className="absolute bottom-0 left-0 p-4 md:p-8 flex items-center gap-2 text-white font-semibold text-base md:text-xl lg:text-3xl inter">
+                                                <span>{cat.title}</span>
+                                                <RiArrowRightUpLine className="h-6 w-6 md:h-8 md:w-8 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                            </div>
                                         </div>
-                                    </div>
-                                </a>
-                            ))}
-                        </div>
+                                    </a>
+                                ))}
+                            </div>
+                        )}
                     </div>
                 </div>
             </Container>

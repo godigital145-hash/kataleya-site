@@ -1,0 +1,12 @@
+---
+import AdminLayout from "../../../layouts/AdminLayout.astro";
+import CatalogueFormShell from "../../../components/admin/CatalogueFormShell";
+
+export function getStaticPaths() {
+    return [{ params: { id: "_" } }];
+}
+---
+
+<AdminLayout title="Modifier le catalogue — Admin" active="catalogue">
+    <CatalogueFormShell client:load />
+</AdminLayout>

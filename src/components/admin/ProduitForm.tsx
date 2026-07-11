@@ -7,7 +7,10 @@ type Produit = {
     price: string | null;
     category: string | null;
     cover_image: string | null;
+    catalogue_id: number | null;
 };
+
+type Catalogue = { id: number; title: string };
 
 type Image = { id?: number; url: string; position: number };
 
@@ -18,12 +21,21 @@ export default function ProduitForm(props: Props) {
     const [description, setDescription] = useState("");
     const [price, setPrice] = useState("");
     const [category, setCategory] = useState("");
+    const [catalogueId, setCatalogueId] = useState("");
+    const [catalogues, setCatalogues] = useState<Catalogue[] | null>(null);
     const [coverImage, setCoverImage] = useState<string | null>(null);
     const [images, setImages] = useState<Image[]>([]);
     const [loading, setLoading] = useState(props.mode === "edit");
     const [saving, setSaving] = useState(false);
     const [uploading, setUploading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        fetch("/api/catalogues")
+            .then((r) => r.json() as Promise<{ catalogues: Catalogue[] }>)
+            .then((d) => setCatalogues(d.catalogues))
+            .catch(() => setCatalogues([]));
+    }, []);
 
     useEffect(() => {
         if (props.mode !== "edit") return;
@@ -36,6 +48,7 @@ export default function ProduitForm(props: Props) {
                 setDescription(data.produit.description);
                 setPrice(data.produit.price ?? "");
                 setCategory(data.produit.category ?? "");
+                setCatalogueId(data.produit.catalogue_id ? String(data.produit.catalogue_id) : "");
                 setCoverImage(data.produit.cover_image);
                 setImages(data.images);
             } catch {
@@ -95,6 +108,10 @@ export default function ProduitForm(props: Props) {
     async function onSubmit(e: React.FormEvent) {
         e.preventDefault();
         setError(null);
+        if (!catalogueId) {
+            setError("Le catalogue est requis.");
+            return;
+        }
         setSaving(true);
         const payload = {
             title,
@@ -102,6 +119,7 @@ export default function ProduitForm(props: Props) {
             price: price || null,
             category: category || null,
             cover_image: coverImage,
+            catalogue_id: Number(catalogueId),
             images: images.map((i) => i.url),
         };
         const url = props.mode === "create" ? "/api/admin/produits" : `/api/admin/produits/${props.id}`;
@@ -152,6 +170,31 @@ export default function ProduitForm(props: Props) {
                         rows={4}
                         className="w-full border border-neutral-300 px-4 py-3 inter outline-none focus:border-neutral-900"
                     />
+                </Field>
+
+                <Field label="Catalogue" required>
+                    <select
+                        value={catalogueId}
+                        onChange={(e) => setCatalogueId(e.target.value)}
+                        required
+                        className="w-full border border-neutral-300 px-4 py-3 inter outline-none focus:border-neutral-900 bg-white"
+                    >
+                        <option value="">-- Choisir un catalogue --</option>
+                        {catalogues?.map((cat) => (
+                            <option key={cat.id} value={cat.id}>
+                                {cat.title}
+                            </option>
+                        ))}
+                    </select>
+                    {catalogues && catalogues.length === 0 && (
+                        <p className="text-xs text-neutral-500 mt-1">
+                            Aucun catalogue disponible.{" "}
+                            <a href="/admin/catalogue/nouveau" className="underline">
+                                Créez-en un d'abord
+                            </a>
+                            .
+                        </p>
+                    )}
                 </Field>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
