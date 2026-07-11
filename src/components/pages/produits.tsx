@@ -5,9 +5,10 @@ import Navbar from "../Navbar";
 import { Temoignage } from "./home";
 import { RiArrowRightUpLine } from "../icons";
 
-type Travail = {
+type Produit = {
     id: number;
     title: string;
+    price: string | null;
     category: string | null;
     cover_image: string | null;
 };
@@ -48,7 +49,7 @@ function ParallaxImage({ src, alt }: { src: string; alt: string }) {
         <div
             ref={wrapRef}
             className="relative w-full overflow-hidden bg-neutral-100"
-            style={{ aspectRatio: ratio ?? "9 / 16" }}
+            style={{ aspectRatio: ratio ?? "1 / 1" }}
         >
             <img
                 ref={imgRef}
@@ -67,14 +68,14 @@ function ParallaxImage({ src, alt }: { src: string; alt: string }) {
     );
 }
 
-export default function Travaux() {
-    const [travaux, setTravaux] = useState<Travail[] | null>(null);
+export default function Produits() {
+    const [produits, setProduits] = useState<Produit[] | null>(null);
 
     useEffect(() => {
-        fetch("/api/travaux")
-            .then((r) => r.json() as Promise<{ travaux: Travail[] }>)
-            .then((d) => setTravaux(d.travaux))
-            .catch(() => setTravaux([]));
+        fetch("/api/produits")
+            .then((r) => r.json() as Promise<{ produits: Produit[] }>)
+            .then((d) => setProduits(d.produits))
+            .catch(() => setProduits([]));
     }, []);
 
     return (
@@ -84,33 +85,33 @@ export default function Travaux() {
             <Container>
                 <div className="flex flex-col lg:flex-row items-start gap-8 lg:gap-11">
                     <div className="w-full lg:w-112.5">
-                        <h1 className="text-4xl sm:text-5xl lg:text-[64px] font-bold inter">Nos Travaux</h1>
+                        <h1 className="text-4xl sm:text-5xl lg:text-[64px] font-bold inter" style={{ lineHeight: 1 }}>Nos Produits</h1>
                         <div>
                             <p className="text-base md:text-lg mt-4 text-neutral-700">
-                                Nos réalisations sont le reflet de notre passion pour l'excellence. Chaque chantier est mené avec rigueur afin d'offrir des espaces harmonieux, durables et élégants, conçus pour répondre aux attentes les plus exigeantes.
+                                Découvrez notre sélection de produits, pensés pour allier qualité, élégance et durabilité.
                             </p>
                         </div>
                     </div>
                     <div className="flex-1 w-full">
-                        {!travaux && <p className="text-neutral-500">Chargement…</p>}
-                        {travaux && travaux.length === 0 && (
-                            <p className="text-neutral-500">Aucune réalisation pour l'instant.</p>
+                        {!produits && <p className="text-neutral-500">Chargement…</p>}
+                        {produits && produits.length === 0 && (
+                            <p className="text-neutral-500">Aucun produit pour l'instant.</p>
                         )}
-                        {travaux && travaux.length > 0 && (
-                            <div className="columns-2 lg:columns-3 gap-4 md:gap-6 [column-fill:balance]">
-                                {travaux.map((t) => (
-                                    <a
-                                        href={`/travaux/${t.id}`}
-                                        key={t.id}
-                                        className="group block mb-4 md:mb-6 break-inside-avoid relative overflow-hidden"
-                                    >
-                                        <div className="relative overflow-hidden">
-                                            <ParallaxImage src={t.cover_image || "/aff_1.jpg"} alt={t.title} />
-                                            <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/10 to-transparent pointer-events-none" />
-                                            <div className="absolute bottom-0 left-0 p-4 md:p-8 flex items-center gap-2 text-white font-semibold text-base md:text-xl inter">
-                                                <span>{t.category || t.title}</span>
-                                                <RiArrowRightUpLine className="h-6 w-6 md:h-8 md:w-8 opacity-0 group-hover:opacity-100 transition-opacity" />
+                        {produits && produits.length > 0 && (
+                            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+                                {produits.map((p) => (
+                                    <a key={p.id} href={`/produits/${p.id}`} className="group block">
+                                        <div className="relative overflow-hidden mb-4">
+                                            <ParallaxImage src={p.cover_image || "/aff_1.jpg"} alt={p.title} />
+                                        </div>
+                                        <div className="flex items-start justify-between gap-3">
+                                            <div>
+                                                <h3 className="inter font-bold text-base md:text-lg">{p.title}</h3>
+                                                {p.price && (
+                                                    <p className="inter text-neutral-500 text-sm mt-1">{p.price}</p>
+                                                )}
                                             </div>
+                                            <RiArrowRightUpLine className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity mt-1" />
                                         </div>
                                     </a>
                                 ))}

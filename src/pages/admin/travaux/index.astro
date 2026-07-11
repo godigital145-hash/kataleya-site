@@ -1,0 +1,8 @@
+---
+import AdminLayout from "../../../layouts/AdminLayout.astro";
+import TravauxList from "../../../components/admin/TravauxList";
+---
+
+<AdminLayout title="Travaux — Admin" active="travaux">
+    <TravauxList client:load />
+</AdminLayout>

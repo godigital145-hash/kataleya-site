@@ -58,6 +58,7 @@ export default function ContactPage() {
                         </div>
                     </div>
                     <div className="flex-1 w-full">
+                        <div className="lg:h-26"></div>
                         <div className="w-full">
                             <form onSubmit={onSubmit} className="flex flex-col gap-5">
                                 <div className="grid grid-cols-2 gap-5 mb-4">

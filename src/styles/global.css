@@ -25,8 +25,8 @@
     z-index: -1;
 
     @media (width >=64rem) {
-        height: 20px;
-        bottom: 10px;
+        height: 40px;
+        bottom: 15px;
     }
 }
 

@@ -2,6 +2,15 @@
 import CollectionPage from "../../components/pages/collection";
 import Layout from "../../layouts/Layout.astro";
 
+export function getStaticPaths() {
+    return [
+        { params: { id: "cuisine" } },
+        { params: { id: "carrelage" } },
+        { params: { id: "salle-de-bain" } },
+        { params: { id: "amenagement" } },
+    ];
+}
+
 const { id } = Astro.params;
 ---
 

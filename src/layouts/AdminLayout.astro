@@ -1,0 +1,38 @@
+---
+import "../styles/global.css";
+import AdminSidebar from "../components/admin/AdminSidebar";
+
+const { title = "Admin — La Kataleya", active = "" } = Astro.props as {
+    title?: string;
+    active?: string;
+};
+---
+
+<!doctype html>
+<html lang='fr'>
+    <head>
+        <meta charset='UTF-8' />
+        <meta name='viewport' content='width=device-width' />
+        <link rel='icon' type='image/svg+xml' href='/favicon.svg' />
+        <link rel='icon' href='/favicon.ico' />
+        <title>{title}</title>
+    </head>
+    <body class='bg-white text-neutral-900'>
+        <div class='flex min-h-dvh'>
+            <AdminSidebar active={active} client:load />
+            <main class='flex-1 min-w-0 h-dvh overflow-y-auto'>
+                <div class='px-6 lg:px-12 py-10 lg:py-14 h-full pb-10'>
+                    <slot />
+                </div>
+            </main>
+        </div>
+    </body>
+</html>
+
+<style>
+    html,
+    body {
+        margin: 0;
+        width: 100%;
+    }
+</style>

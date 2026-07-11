@@ -1,0 +1,12 @@
+---
+import AdminLayout from "../../../layouts/AdminLayout.astro";
+import TravailFormShell from "../../../components/admin/TravailFormShell";
+
+export function getStaticPaths() {
+    return [{ params: { id: "_" } }];
+}
+---
+
+<AdminLayout title="Modifier le travail — Admin" active="travaux">
+    <TravailFormShell client:load />
+</AdminLayout>

@@ -1,0 +1,12 @@
+---
+import AdminLayout from "../../../layouts/AdminLayout.astro";
+import ProduitFormShell from "../../../components/admin/ProduitFormShell";
+
+export function getStaticPaths() {
+    return [{ params: { id: "_" } }];
+}
+---
+
+<AdminLayout title="Modifier le produit — Admin" active="produits">
+    <ProduitFormShell client:load />
+</AdminLayout>

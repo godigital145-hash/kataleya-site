@@ -1,0 +1,8 @@
+---
+import AdminLayout from "../../../layouts/AdminLayout.astro";
+import TravailForm from "../../../components/admin/TravailForm";
+---
+
+<AdminLayout title="Nouveau travail — Admin" active="travaux">
+    <TravailForm mode="create" client:load />
+</AdminLayout>

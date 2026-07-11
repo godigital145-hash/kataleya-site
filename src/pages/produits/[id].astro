@@ -1,5 +1,5 @@
 ---
-import TravailPage from "../../components/pages/travail";
+import ProduitPage from "../../components/pages/produit";
 import Layout from "../../layouts/Layout.astro";
 
 export function getStaticPaths() {
@@ -10,5 +10,5 @@ const { id } = Astro.params;
 ---
 
 <Layout>
-    <TravailPage id={id ?? ""} client:load />
+    <ProduitPage id={id ?? ""} client:load />
 </Layout>

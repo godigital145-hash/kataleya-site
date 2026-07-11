@@ -1,0 +1,8 @@
+---
+import AdminLayout from "../../../layouts/AdminLayout.astro";
+import ProduitForm from "../../../components/admin/ProduitForm";
+---
+
+<AdminLayout title="Nouveau produit — Admin" active="produits">
+    <ProduitForm mode="create" client:load />
+</AdminLayout>

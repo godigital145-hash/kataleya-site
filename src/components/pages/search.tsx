@@ -76,7 +76,7 @@ function TitreAndRecentSearch({ searchList }: { searchList: string[] }) {
             <Container>
                 <h1 className="text-4xl sm:text-5xl lg:text-[64px] font-bold inter mb-5" style={{ lineHeight: 1 }}>Recherche</h1>
                 {
-                    searchList && (<div className="flex items-center flex-wrap gap-2">
+                    searchList.length > 0 && (<div className="flex items-center flex-wrap gap-2">
                         <h3 className="text-xl font-bold">Dernière Recherche</h3>
                         {searchList.map((item) => (
                             <span key={item} className="px-4 py-2 bg-slate-100 inter">{item}</span>

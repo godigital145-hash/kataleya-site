@@ -1,0 +1,8 @@
+---
+import AdminLayout from "../../../layouts/AdminLayout.astro";
+import ProduitsList from "../../../components/admin/ProduitsList";
+---
+
+<AdminLayout title="Produits — Admin" active="produits">
+    <ProduitsList client:load />
+</AdminLayout>
