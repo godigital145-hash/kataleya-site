@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import CatalogueImportKataleya from "./CatalogueImportKataleya";
 
 type Catalogue = {
     id: number;
@@ -84,6 +85,7 @@ export default function CatalogueForm(props: Props) {
     if (error && props.mode === "edit" && !title) return <p className="text-red-600">{error}</p>;
 
     return (
+        <>
         <form onSubmit={onSubmit} className="max-w-3xl">
             <div className="flex items-center justify-between mb-8">
                 <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold inter" style={{ lineHeight: 1 }}>
@@ -149,6 +151,8 @@ export default function CatalogueForm(props: Props) {
                 </div>
             </div>
         </form>
+        {props.mode === "edit" && <CatalogueImportKataleya catalogueId={props.id} />}
+        </>
     );
 }
 
