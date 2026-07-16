@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { listCatalogues, deleteCatalogue, imgUrl } from "../../lib/api";
 
 type Catalogue = {
     id: number;
@@ -14,7 +15,7 @@ export default function CataloguesList() {
 
     async function load() {
         try {
-            const res = await fetch("/api/catalogues");
+            const res = await listCatalogues();
             const data = await res.json<{ catalogues: Catalogue[] }>();
             setCatalogues(data.catalogues);
         } catch (e) {
@@ -28,7 +29,7 @@ export default function CataloguesList() {
 
     async function onDelete(id: number) {
         if (!confirm("Supprimer ce catalogue ?")) return;
-        const res = await fetch(`/api/admin/catalogues/${id}`, { method: "DELETE" });
+        const res = await deleteCatalogue(id);
         if (res.ok) load();
         else alert("Erreur lors de la suppression.");
     }
@@ -59,7 +60,7 @@ export default function CataloguesList() {
                         <div key={cat.id} className="border border-neutral-200">
                             <div className="aspect-video bg-neutral-100 overflow-hidden">
                                 <img
-                                    src={cat.cover_image}
+                                    src={imgUrl(cat.cover_image)}
                                     alt={cat.title}
                                     className="w-full h-full object-cover"
                                 />

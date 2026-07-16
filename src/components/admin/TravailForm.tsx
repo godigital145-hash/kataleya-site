@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { getTravail, adminUpload, createTravail, updateTravail, imgUrl } from "../../lib/api";
 
 type Travail = {
     id: number;
@@ -31,7 +32,7 @@ export default function TravailForm(props: Props) {
         if (props.mode !== "edit") return;
         (async () => {
             try {
-                const res = await fetch(`/api/travaux/${props.id}`);
+                const res = await getTravail(props.id);
                 if (!res.ok) throw new Error("not found");
                 const data = await res.json<{ travail: Travail; images: Image[] }>();
                 setTitle(data.travail.title);
@@ -50,9 +51,7 @@ export default function TravailForm(props: Props) {
     }, []);
 
     async function uploadFile(file: File): Promise<string | null> {
-        const form = new FormData();
-        form.append("file", file);
-        const res = await fetch("/api/admin/upload", { method: "POST", body: form });
+        const res = await adminUpload(file);
         if (!res.ok) return null;
         const data = await res.json<{ url: string }>();
         return data.url;
@@ -108,13 +107,7 @@ export default function TravailForm(props: Props) {
             cover_image: coverImage,
             images: images.map((i) => i.url),
         };
-        const url = props.mode === "create" ? "/api/admin/travaux" : `/api/admin/travaux/${props.id}`;
-        const method = props.mode === "create" ? "POST" : "PUT";
-        const res = await fetch(url, {
-            method,
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload),
-        });
+        const res = props.mode === "create" ? await createTravail(payload) : await updateTravail(props.id, payload);
         setSaving(false);
         if (!res.ok) {
             const data = await res.json<{ error?: string }>().catch(() => ({}));
@@ -189,7 +182,7 @@ export default function TravailForm(props: Props) {
                     <div className="flex items-center gap-4">
                         <div className="w-40 aspect-video bg-neutral-100 border border-neutral-200 overflow-hidden">
                             {coverImage && (
-                                <img src={coverImage} alt="couverture" className="w-full h-full object-cover" />
+                                <img src={imgUrl(coverImage)} alt="couverture" className="w-full h-full object-cover" />
                             )}
                         </div>
                         <div className="flex flex-col gap-2">
@@ -216,7 +209,7 @@ export default function TravailForm(props: Props) {
                                 {images.map((img, i) => (
                                     <div key={i} className="border border-neutral-200">
                                         <div className="aspect-square bg-neutral-100 overflow-hidden">
-                                            <img src={img.url} alt="" className="w-full h-full object-cover" />
+                                            <img src={imgUrl(img.url)} alt="" className="w-full h-full object-cover" />
                                         </div>
                                         <div className="flex justify-between items-center px-2 py-1 text-xs">
                                             <div className="flex gap-1">

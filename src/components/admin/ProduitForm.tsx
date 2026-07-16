@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { listCatalogues, getProduit, adminUpload, createProduit, updateProduit, imgUrl } from "../../lib/api";
 
 type Produit = {
     id: number;
@@ -31,7 +32,7 @@ export default function ProduitForm(props: Props) {
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        fetch("/api/catalogues")
+        listCatalogues()
             .then((r) => r.json() as Promise<{ catalogues: Catalogue[] }>)
             .then((d) => setCatalogues(d.catalogues))
             .catch(() => setCatalogues([]));
@@ -41,7 +42,7 @@ export default function ProduitForm(props: Props) {
         if (props.mode !== "edit") return;
         (async () => {
             try {
-                const res = await fetch(`/api/produits/${props.id}`);
+                const res = await getProduit(props.id);
                 if (!res.ok) throw new Error("not found");
                 const data = await res.json<{ produit: Produit; images: Image[] }>();
                 setTitle(data.produit.title);
@@ -60,9 +61,7 @@ export default function ProduitForm(props: Props) {
     }, []);
 
     async function uploadFile(file: File): Promise<string | null> {
-        const form = new FormData();
-        form.append("file", file);
-        const res = await fetch("/api/admin/upload", { method: "POST", body: form });
+        const res = await adminUpload(file);
         if (!res.ok) return null;
         const data = await res.json<{ url: string }>();
         return data.url;
@@ -122,13 +121,7 @@ export default function ProduitForm(props: Props) {
             catalogue_id: Number(catalogueId),
             images: images.map((i) => i.url),
         };
-        const url = props.mode === "create" ? "/api/admin/produits" : `/api/admin/produits/${props.id}`;
-        const method = props.mode === "create" ? "POST" : "PUT";
-        const res = await fetch(url, {
-            method,
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload),
-        });
+        const res = props.mode === "create" ? await createProduit(payload) : await updateProduit(props.id, payload);
         setSaving(false);
         if (!res.ok) {
             const data = await res.json<{ error?: string }>().catch(() => ({}));
@@ -221,7 +214,7 @@ export default function ProduitForm(props: Props) {
                     <div className="flex items-center gap-4">
                         <div className="w-40 aspect-video bg-neutral-100 border border-neutral-200 overflow-hidden">
                             {coverImage && (
-                                <img src={coverImage} alt="couverture" className="w-full h-full object-cover" />
+                                <img src={imgUrl(coverImage)} alt="couverture" className="w-full h-full object-cover" />
                             )}
                         </div>
                         <div className="flex flex-col gap-2">
@@ -248,7 +241,7 @@ export default function ProduitForm(props: Props) {
                                 {images.map((img, i) => (
                                     <div key={i} className="border border-neutral-200">
                                         <div className="aspect-square bg-neutral-100 overflow-hidden">
-                                            <img src={img.url} alt="" className="w-full h-full object-cover" />
+                                            <img src={imgUrl(img.url)} alt="" className="w-full h-full object-cover" />
                                         </div>
                                         <div className="flex justify-between items-center px-2 py-1 text-xs">
                                             <div className="flex gap-1">

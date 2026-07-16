@@ -1,4 +1,5 @@
 import { defineMiddleware } from "astro:middleware";
+import { adminMe } from "./lib/api";
 
 const SESSION_COOKIE = "lk_admin";
 
@@ -15,11 +16,8 @@ export const onRequest = defineMiddleware(async (context, next) => {
         return context.redirect("/admin/login");
     }
 
-    const apiBase = context.url.origin;
     try {
-        const res = await fetch(`${apiBase}/api/admin/me`, {
-            headers: { cookie: `${SESSION_COOKIE}=${token}` },
-        });
+        const res = await adminMe(`${SESSION_COOKIE}=${token}`);
         const data = (await res.json()) as { authed?: boolean };
         if (!data.authed) return context.redirect("/admin/login");
     } catch {

@@ -4,6 +4,7 @@ import Footer from "../Footer";
 import Navbar from "../Navbar";
 import { RiArrowLeftLongLine } from "../icons";
 import { Temoignage } from "./home";
+import { getTravail, imgUrl } from "../../lib/api";
 
 type Travail = {
     id: number;
@@ -32,7 +33,7 @@ export default function TravailPage({ id: propsId }: { id?: string }) {
             setNotFound(true);
             return;
         }
-        fetch(`/api/travaux/${realId}`)
+        getTravail(realId)
             .then(async (r) => {
                 if (!r.ok) throw new Error("not found");
                 return r.json() as Promise<{ travail: Travail; images: Image[] }>;
@@ -85,7 +86,7 @@ export default function TravailPage({ id: propsId }: { id?: string }) {
                             {travail.cover_image && (
                                 <div className="w-full aspect-video overflow-hidden mb-8 lg:mb-12">
                                     <img
-                                        src={travail.cover_image}
+                                        src={imgUrl(travail.cover_image)}
                                         alt={travail.title}
                                         className="w-full h-full object-cover"
                                     />
@@ -96,7 +97,7 @@ export default function TravailPage({ id: propsId }: { id?: string }) {
                                 {images.map((img) => (
                                     <div key={img.id} className="w-full overflow-hidden">
                                         <img
-                                            src={img.url}
+                                            src={imgUrl(img.url)}
                                             alt={`${travail.title}`}
                                             className="w-full h-auto object-cover"
                                         />

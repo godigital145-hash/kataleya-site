@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import CatalogueImportKataleya from "./CatalogueImportKataleya";
+import { getCatalogue, adminUpload, createCatalogue, updateCatalogue, imgUrl } from "../../lib/api";
 
 type Catalogue = {
     id: number;
@@ -23,7 +24,7 @@ export default function CatalogueForm(props: Props) {
         if (props.mode !== "edit") return;
         (async () => {
             try {
-                const res = await fetch(`/api/catalogues/${props.id}`);
+                const res = await getCatalogue(props.id);
                 if (!res.ok) throw new Error("not found");
                 const data = await res.json<{ catalogue: Catalogue }>();
                 setTitle(data.catalogue.title);
@@ -41,9 +42,7 @@ export default function CatalogueForm(props: Props) {
         const file = e.target.files?.[0];
         if (!file) return;
         setUploading(true);
-        const form = new FormData();
-        form.append("file", file);
-        const res = await fetch("/api/admin/upload", { method: "POST", body: form });
+        const res = await adminUpload(file);
         setUploading(false);
         if (res.ok) {
             const data = await res.json<{ url: string }>();
@@ -65,13 +64,8 @@ export default function CatalogueForm(props: Props) {
             description: description || null,
             cover_image: coverImage,
         };
-        const url = props.mode === "create" ? "/api/admin/catalogues" : `/api/admin/catalogues/${props.id}`;
-        const method = props.mode === "create" ? "POST" : "PUT";
-        const res = await fetch(url, {
-            method,
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload),
-        });
+        const res =
+            props.mode === "create" ? await createCatalogue(payload) : await updateCatalogue(props.id, payload);
         setSaving(false);
         if (!res.ok) {
             const data = await res.json<{ error?: string }>().catch(() => ({}));
@@ -120,7 +114,7 @@ export default function CatalogueForm(props: Props) {
                     <div className="flex items-center gap-4">
                         <div className="w-40 aspect-video bg-neutral-100 border border-neutral-200 overflow-hidden">
                             {coverImage && (
-                                <img src={coverImage} alt="couverture" className="w-full h-full object-cover" />
+                                <img src={imgUrl(coverImage)} alt="couverture" className="w-full h-full object-cover" />
                             )}
                         </div>
                         <div className="flex flex-col gap-2">

@@ -4,6 +4,7 @@ import Footer from "../Footer";
 import Navbar from "../Navbar";
 import { Temoignage } from "./home";
 import { RiArrowRightUpLine } from "../icons";
+import { listProduits, imgUrl } from "../../lib/api";
 
 type Produit = {
     id: number;
@@ -72,7 +73,7 @@ export default function Produits() {
     const [produits, setProduits] = useState<Produit[] | null>(null);
 
     useEffect(() => {
-        fetch("/api/produits")
+        listProduits()
             .then((r) => r.json() as Promise<{ produits: Produit[] }>)
             .then((d) => setProduits(d.produits))
             .catch(() => setProduits([]));
@@ -102,7 +103,7 @@ export default function Produits() {
                                 {produits.map((p) => (
                                     <a key={p.id} href={`/produits/${p.id}`} className="group block">
                                         <div className="relative overflow-hidden mb-4">
-                                            <ParallaxImage src={p.cover_image || "/aff_1.jpg"} alt={p.title} />
+                                            <ParallaxImage src={p.cover_image ? imgUrl(p.cover_image) : "/aff_1.jpg"} alt={p.title} />
                                         </div>
                                         <div className="flex items-start justify-between gap-3">
                                             <div>

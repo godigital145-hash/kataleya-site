@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { adminLogin } from "../../../lib/api";
 
 export default function AdminLogin() {
     const [password, setPassword] = useState("");
@@ -11,12 +12,7 @@ export default function AdminLogin() {
         setError("");
         setLoading(true);
         try {
-            const res = await fetch("/api/admin/login", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ password }),
-                credentials: "same-origin",
-            });
+            const res = await adminLogin(password);
             if (res.ok) {
                 window.location.href = "/admin";
             } else {

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { kataleyaStatus, kataleyaConnect, kataleyaDisconnect, kataleyaCollections, kataleyaSousCollections, kataleyaArticles } from "../../lib/api";
 
 type Status = { connected: boolean; baseUrl?: string; email?: string };
 
@@ -47,7 +48,7 @@ export default function ParametresPage() {
     const [dataError, setDataError] = useState<string | null>(null);
 
     function loadStatus() {
-        fetch("/api/admin/kataleya/status")
+        kataleyaStatus()
             .then((r) => r.json<Status>())
             .then(setStatus)
             .catch(() => setStatus({ connected: false }));
@@ -61,11 +62,7 @@ export default function ParametresPage() {
         e.preventDefault();
         setError(null);
         setConnecting(true);
-        const res = await fetch("/api/admin/kataleya/connect", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ baseUrl, email, password }),
-        });
+        const res = await kataleyaConnect(baseUrl, email, password);
         setConnecting(false);
         const data = await res.json<{ error?: string }>().catch(() => ({}));
         if (!res.ok) {
@@ -81,7 +78,7 @@ export default function ParametresPage() {
 
     async function onDisconnect() {
         if (!confirm("Se déconnecter du serveur Kataleya ?")) return;
-        await fetch("/api/admin/kataleya/disconnect", { method: "POST" });
+        await kataleyaDisconnect();
         setCollections(null);
         setSousCollections(null);
         setArticles(null);
@@ -91,7 +88,7 @@ export default function ParametresPage() {
     async function loadCollections() {
         setLoadingData(true);
         setDataError(null);
-        const res = await fetch("/api/admin/kataleya/collections");
+        const res = await kataleyaCollections();
         const data = await res.json<{ items?: Collection[]; error?: string }>().catch(() => ({}));
         setLoadingData(false);
         if (res.ok) setCollections(data?.items ?? []);
@@ -101,7 +98,7 @@ export default function ParametresPage() {
     async function loadSousCollections() {
         setLoadingData(true);
         setDataError(null);
-        const res = await fetch("/api/admin/kataleya/sous-collections");
+        const res = await kataleyaSousCollections();
         const data = await res.json<{ items?: SousCollection[]; error?: string }>().catch(() => ({}));
         setLoadingData(false);
         if (res.ok) setSousCollections(data?.items ?? []);
@@ -111,8 +108,7 @@ export default function ParametresPage() {
     async function loadArticles() {
         setLoadingData(true);
         setDataError(null);
-        const qs = q ? `?q=${encodeURIComponent(q)}` : "";
-        const res = await fetch(`/api/admin/kataleya/articles${qs}`);
+        const res = await kataleyaArticles({ q });
         const data = await res.json<{ items?: Article[]; total?: number; error?: string }>().catch(() => ({}));
         setLoadingData(false);
         if (res.ok) {

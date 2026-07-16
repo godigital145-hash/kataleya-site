@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { listProduits, deleteProduit, imgUrl } from "../../lib/api";
 
 type Produit = {
     id: number;
@@ -16,7 +17,7 @@ export default function ProduitsList() {
 
     async function load() {
         try {
-            const res = await fetch("/api/produits");
+            const res = await listProduits();
             const data = await res.json<{ produits: Produit[] }>();
             setProduits(data.produits);
         } catch (e) {
@@ -30,7 +31,7 @@ export default function ProduitsList() {
 
     async function onDelete(id: number) {
         if (!confirm("Supprimer ce produit ?")) return;
-        const res = await fetch(`/api/admin/produits/${id}`, { method: "DELETE" });
+        const res = await deleteProduit(id);
         if (res.ok) load();
         else alert("Erreur lors de la suppression.");
     }
@@ -62,7 +63,7 @@ export default function ProduitsList() {
                             <div className="aspect-video bg-neutral-100 overflow-hidden">
                                 {p.cover_image && (
                                     <img
-                                        src={p.cover_image}
+                                        src={imgUrl(p.cover_image)}
                                         alt={p.title}
                                         className="w-full h-full object-cover"
                                     />

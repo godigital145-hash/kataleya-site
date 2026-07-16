@@ -4,6 +4,7 @@ import Footer from "../Footer";
 import Navbar from "../Navbar";
 import { RiArrowLeftLongLine, RiArrowRightUpLine } from "../icons";
 import { Partenaire } from "./home";
+import { getCatalogue, imgUrl } from "../../lib/api";
 
 type Catalogue = {
     id: number;
@@ -90,7 +91,7 @@ export default function CatalogueDetail({ id: propsId }: { id?: string }) {
             setNotFound(true);
             return;
         }
-        fetch(`/api/catalogues/${realId}`)
+        getCatalogue(realId)
             .then(async (r) => {
                 if (!r.ok) throw new Error("not found");
                 return r.json() as Promise<{ catalogue: Catalogue; produits: Produit[] }>;
@@ -135,7 +136,7 @@ export default function CatalogueDetail({ id: propsId }: { id?: string }) {
 
                         <div className="w-full aspect-video overflow-hidden mb-10 lg:mb-14">
                             <img
-                                src={catalogue.cover_image}
+                                src={imgUrl(catalogue.cover_image)}
                                 alt={catalogue.title}
                                 className="w-full h-full object-cover"
                             />
@@ -150,7 +151,7 @@ export default function CatalogueDetail({ id: propsId }: { id?: string }) {
                                 {produits.map((p) => (
                                     <a key={p.id} href={`/produits/${p.id}`} className="group block">
                                         <div className="relative overflow-hidden mb-4">
-                                            <ParallaxImage src={p.cover_image || "/aff_1.jpg"} alt={p.title} />
+                                            <ParallaxImage src={p.cover_image ? imgUrl(p.cover_image) : "/aff_1.jpg"} alt={p.title} />
                                         </div>
                                         <div className="flex items-start justify-between gap-3">
                                             <div>

@@ -1,4 +1,14 @@
 import { useEffect, useState } from "react";
+import {
+    kataleyaStatus,
+    getCatalogue,
+    kataleyaCollections,
+    kataleyaSousCollections,
+    kataleyaArticles,
+    kataleyaImport,
+    deleteProduit,
+    imgUrl,
+} from "../../lib/api";
 
 type Status = { connected: boolean; baseUrl?: string; email?: string };
 
@@ -36,14 +46,14 @@ export default function CatalogueImportKataleya({ catalogueId }: { catalogueId: 
     const [error, setError] = useState<string | null>(null);
 
     function loadStatus() {
-        fetch("/api/admin/kataleya/status")
+        kataleyaStatus()
             .then((r) => r.json<Status>())
             .then(setStatus)
             .catch(() => setStatus({ connected: false }));
     }
 
     function loadProduits() {
-        fetch(`/api/catalogues/${catalogueId}`)
+        getCatalogue(catalogueId)
             .then((r) => r.json<{ produits?: Produit[] }>())
             .then((data) => setProduits(data.produits ?? []))
             .catch(() => setProduits([]));
@@ -58,14 +68,14 @@ export default function CatalogueImportKataleya({ catalogueId }: { catalogueId: 
         if (!status?.connected) return;
         if (tab === "collection" && collections === null) {
             setLoadingData(true);
-            fetch("/api/admin/kataleya/collections")
+            kataleyaCollections()
                 .then((r) => r.json<{ items?: Collection[] }>())
                 .then((data) => setCollections(data.items ?? []))
                 .finally(() => setLoadingData(false));
         }
         if (tab === "sous-collection" && collections === null) {
             setLoadingData(true);
-            fetch("/api/admin/kataleya/collections")
+            kataleyaCollections()
                 .then((r) => r.json<{ items?: Collection[] }>())
                 .then((data) => setCollections(data.items ?? []))
                 .finally(() => setLoadingData(false));
@@ -77,7 +87,7 @@ export default function CatalogueImportKataleya({ catalogueId }: { catalogueId: 
         setSousCollections(null);
         if (!collectionId) return;
         setLoadingData(true);
-        fetch(`/api/admin/kataleya/sous-collections?collectionId=${encodeURIComponent(collectionId)}`)
+        kataleyaSousCollections(collectionId)
             .then((r) => r.json<{ items?: SousCollection[] }>())
             .then((data) => setSousCollections(data.items ?? []))
             .finally(() => setLoadingData(false));
@@ -85,10 +95,7 @@ export default function CatalogueImportKataleya({ catalogueId }: { catalogueId: 
 
     function loadArticles(collectionId?: string) {
         setLoadingData(true);
-        const qs = new URLSearchParams();
-        if (q) qs.set("q", q);
-        if (collectionId) qs.set("collectionId", collectionId);
-        fetch(`/api/admin/kataleya/articles?${qs}`)
+        kataleyaArticles({ q, collectionId })
             .then((r) => r.json<{ items?: Article[] }>())
             .then((data) => setArticles(data.items ?? []))
             .finally(() => setLoadingData(false));
@@ -112,11 +119,7 @@ export default function CatalogueImportKataleya({ catalogueId }: { catalogueId: 
         setImporting(true);
         setError(null);
         setMessage(null);
-        const res = await fetch(`/api/admin/catalogues/${catalogueId}/kataleya-import`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(body),
-        });
+        const res = await kataleyaImport(catalogueId, body);
         setImporting(false);
         const data = await res.json<{ imported?: number; error?: string }>().catch(() => ({}));
         if (!res.ok) {
@@ -130,7 +133,7 @@ export default function CatalogueImportKataleya({ catalogueId }: { catalogueId: 
 
     async function onDeleteProduit(id: number) {
         if (!confirm("Supprimer ce produit du catalogue ?")) return;
-        await fetch(`/api/admin/produits/${id}`, { method: "DELETE" });
+        await deleteProduit(id);
         loadProduits();
     }
 
@@ -150,7 +153,7 @@ export default function CatalogueImportKataleya({ catalogueId }: { catalogueId: 
                             <div className="flex items-center gap-3">
                                 <div className="w-12 h-12 bg-neutral-100 border border-neutral-200 overflow-hidden shrink-0">
                                     {p.cover_image && (
-                                        <img src={p.cover_image} alt="" className="w-full h-full object-cover" />
+                                        <img src={imgUrl(p.cover_image)} alt="" className="w-full h-full object-cover" />
                                     )}
                                 </div>
                                 <div>

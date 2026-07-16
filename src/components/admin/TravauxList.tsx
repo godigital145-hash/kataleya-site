@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { listTravaux, deleteTravail, imgUrl } from "../../lib/api";
 
 type Travail = {
     id: number;
@@ -16,7 +17,7 @@ export default function TravauxList() {
 
     async function load() {
         try {
-            const res = await fetch("/api/travaux");
+            const res = await listTravaux();
             const data = await res.json<{ travaux: Travail[] }>();
             setTravaux(data.travaux);
         } catch (e) {
@@ -30,7 +31,7 @@ export default function TravauxList() {
 
     async function onDelete(id: number) {
         if (!confirm("Supprimer ce travail ?")) return;
-        const res = await fetch(`/api/admin/travaux/${id}`, { method: "DELETE" });
+        const res = await deleteTravail(id);
         if (res.ok) load();
         else alert("Erreur lors de la suppression.");
     }
@@ -62,7 +63,7 @@ export default function TravauxList() {
                             <div className="aspect-video bg-neutral-100 overflow-hidden">
                                 {t.cover_image && (
                                     <img
-                                        src={t.cover_image}
+                                        src={imgUrl(t.cover_image)}
                                         alt={t.title}
                                         className="w-full h-full object-cover"
                                     />

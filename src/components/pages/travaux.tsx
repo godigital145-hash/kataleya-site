@@ -4,6 +4,7 @@ import Footer from "../Footer";
 import Navbar from "../Navbar";
 import { Temoignage } from "./home";
 import { RiArrowRightUpLine } from "../icons";
+import { listTravaux, imgUrl } from "../../lib/api";
 
 type Travail = {
     id: number;
@@ -71,7 +72,7 @@ export default function Travaux() {
     const [travaux, setTravaux] = useState<Travail[] | null>(null);
 
     useEffect(() => {
-        fetch("/api/travaux")
+        listTravaux()
             .then((r) => r.json() as Promise<{ travaux: Travail[] }>)
             .then((d) => setTravaux(d.travaux))
             .catch(() => setTravaux([]));
@@ -105,7 +106,7 @@ export default function Travaux() {
                                         className="group block mb-4 md:mb-6 break-inside-avoid relative overflow-hidden"
                                     >
                                         <div className="relative overflow-hidden">
-                                            <ParallaxImage src={t.cover_image || "/aff_1.jpg"} alt={t.title} />
+                                            <ParallaxImage src={t.cover_image ? imgUrl(t.cover_image) : "/aff_1.jpg"} alt={t.title} />
                                             <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/10 to-transparent pointer-events-none" />
                                             <div className="absolute bottom-0 left-0 p-4 md:p-8 flex items-center gap-2 text-white font-semibold text-base md:text-xl inter">
                                                 <span>{t.category || t.title}</span>

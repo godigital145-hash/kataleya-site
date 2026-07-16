@@ -5,6 +5,7 @@ import Navbar from "../Navbar";
 
 import { RiArrowRightUpLine } from "../icons";
 import { Partenaire } from "./home";
+import { listCatalogues, imgUrl } from "../../lib/api";
 
 type Catalogue = {
     id: number;
@@ -72,7 +73,7 @@ export default function Catalogue() {
     const [catalogues, setCatalogues] = useState<Catalogue[] | null>(null);
 
     useEffect(() => {
-        fetch("/api/catalogues")
+        listCatalogues()
             .then((r) => r.json() as Promise<{ catalogues: Catalogue[] }>)
             .then((d) => setCatalogues(d.catalogues))
             .catch(() => setCatalogues([]));
@@ -106,7 +107,7 @@ export default function Catalogue() {
                                         className="group block mb-4 md:mb-6 break-inside-avoid relative overflow-hidden"
                                     >
                                         <div className="relative overflow-hidden">
-                                            <ParallaxImage src={cat.cover_image} alt={cat.title} />
+                                            <ParallaxImage src={imgUrl(cat.cover_image)} alt={cat.title} />
                                             <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/10 to-transparent pointer-events-none" />
                                             <div className="absolute bottom-0 left-0 p-4 md:p-8 flex items-center gap-2 text-white font-semibold text-base md:text-xl lg:text-3xl inter">
                                                 <span>{cat.title}</span>

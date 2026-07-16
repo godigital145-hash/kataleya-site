@@ -4,6 +4,7 @@ import Footer from "../Footer";
 import Navbar from "../Navbar";
 import { RiArrowLeftLongLine } from "../icons";
 import { Temoignage } from "./home";
+import { getProduit, imgUrl } from "../../lib/api";
 
 type Produit = {
     id: number;
@@ -33,7 +34,7 @@ export default function ProduitPage({ id: propsId }: { id?: string }) {
             setNotFound(true);
             return;
         }
-        fetch(`/api/produits/${realId}`)
+        getProduit(realId)
             .then(async (r) => {
                 if (!r.ok) throw new Error("not found");
                 return r.json() as Promise<{ produit: Produit; images: Image[] }>;
@@ -90,7 +91,7 @@ export default function ProduitPage({ id: propsId }: { id?: string }) {
                             {produit.cover_image && (
                                 <div className="w-full aspect-video overflow-hidden mb-8 lg:mb-12">
                                     <img
-                                        src={produit.cover_image}
+                                        src={imgUrl(produit.cover_image)}
                                         alt={produit.title}
                                         className="w-full h-full object-cover"
                                     />
@@ -101,7 +102,7 @@ export default function ProduitPage({ id: propsId }: { id?: string }) {
                                 {images.map((img) => (
                                     <div key={img.id} className="w-full overflow-hidden">
                                         <img
-                                            src={img.url}
+                                            src={imgUrl(img.url)}
                                             alt={`${produit.title}`}
                                             className="w-full h-auto object-cover"
                                         />
