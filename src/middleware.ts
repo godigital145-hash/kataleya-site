@@ -15,7 +15,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
         return context.redirect("/admin/login");
     }
 
-    const apiBase = import.meta.env.DEV ? "http://localhost:8788" : context.url.origin;
+    const apiBase = context.url.origin;
     try {
         const res = await fetch(`${apiBase}/api/admin/me`, {
             headers: { cookie: `${SESSION_COOKIE}=${token}` },
