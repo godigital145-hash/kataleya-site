@@ -16,8 +16,8 @@ export default defineConfig({
     plugins: [tailwindcss()],
     server: {
       proxy: {
-        "/api": "http://localhost:8788",
-        "/img": "http://localhost:8788",
+        "/api": "https://kataleya-serveur-site.godigital145.workers.dev",
+        "/img": "https://kataleya-serveur-site.godigital145.workers.dev",
       },
     },
   }
